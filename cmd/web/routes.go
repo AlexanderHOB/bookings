@@ -22,5 +22,11 @@ func routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
+
+	// Establecemos un file server para servir archivos estáticos desde la carpeta "./static/".
+	fileServer := http.FileServer(http.Dir("../../static/"))
+	// Asignamos el file server al enrutador de la aplicación, eliminando el prefijo "/static" de la ruta de la solicitud.
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
+
 	return mux
 }
